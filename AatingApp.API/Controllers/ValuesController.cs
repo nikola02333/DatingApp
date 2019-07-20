@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AatingApp.API.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Controllers {
-    //http://localhost:5000/api/Values
+    
+    [Authorize] // sve unutar ovog kontrlera mora biti AUTORIZOVSAN zahtev
+
     [Route ("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase {
@@ -24,6 +27,11 @@ namespace DatingApp.API.Controllers {
             return  Ok(values);
         }
 
+        [AllowAnonymous] // ne treba da imamo JWT token,
+                         // ne treba da budemo loginovani :D
+                         // Za ovo nam treba Middlwer,
+                         //  njega ukljucujemo u 
+                         // Startap klasi, ConfigurationServices  
         // GET api/values/5
         [HttpGet ("{id}")]
          public async Task<IActionResult> GetValue (int id) {

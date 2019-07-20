@@ -12,6 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 namespace DatingApp.API
 {
     public class Startup
@@ -30,6 +34,18 @@ namespace DatingApp.API
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
+            services.AddScoped<IAuthRepository, AuthRepository>(); // servis je kreiran za svaki poziv, slicno kao Singleton
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                     .AddJwtBearer(options =>{
+                         options.TokenValidationParameters = new TokenValidationParameters{
+
+                             ValidateIssuer=false,
+                             IssuerSigningKey = new SymmetricSecurityKey( Encoding.ASCII.GetBytes(Configuration.GetSection("appSettings:Token").Value)),
+                             
+                             
+                             ValidateAudience=false
+                         };
+                     });   
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +63,7 @@ namespace DatingApp.API
 
             //app.UseHttpsRedirection();
             app.UseCors(x=> x.AllowAnyOrigin());
+            app.UseAuthentication();
             app.UseMvc(); // midlware , izmedju klijenta i API(servera)
         }
     }
