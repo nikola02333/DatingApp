@@ -39,7 +39,8 @@ namespace AatingApp.API.Controllers {
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login (UserForLoginDto userForLoginDto) {
+        public async Task<IActionResult> Login (UserForLoginDto userForLoginDto) 
+        {
 
             var userFromRepo = await _repo.Login (userForLoginDto.Username.ToLower(), userForLoginDto.Password);
             if (userFromRepo == null) {
@@ -54,7 +55,7 @@ namespace AatingApp.API.Controllers {
             };
             // ovoaj kljuc moramo definisati u AppSetings-u
             var key = new SymmetricSecurityKey (Encoding.UTF8
-                                                        .GetBytes (_config.GetSection("appSettings:Token").Value));
+                            .GetBytes (_config.GetSection("appSettings:Token").Value));
             
             //Potpis  tokena
             var creds = new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature);
@@ -65,10 +66,12 @@ namespace AatingApp.API.Controllers {
                 SigningCredentials = creds  
             };
             var tockenHandler = new JwtSecurityTokenHandler();
-            var tocken = tockenHandler.CreateToken(tokenDescriptor);
+            var token = tockenHandler.CreateToken(tokenDescriptor);
 
             return Ok(new {
-                tocken= tockenHandler.WriteToken(tocken)
+                // token, tako ce se zvati na Angularu, Kljuc:vrednost
+                // token: eyJhb...
+                token= tockenHandler.WriteToken(token)
             });
         }
     }
