@@ -1,6 +1,6 @@
 import { AuthService } from './../_services/auth.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { timingSafeEqual } from 'crypto';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -11,20 +11,20 @@ export class RegisterComponent implements OnInit {
   model: any = {};
 @Output() cancelRegister = new EventEmitter();
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private toastr: ToastrService) { }
 
   ngOnInit() {
   }
   register(){
     console.log(this.model);
     this.authService.register(this.model).subscribe( () => {
-      console.log('registration successful');
+      this.toastr.success('registration successful' );
     }, error => {
-      console.log(error);
+     this.toastr.error('error!!!');
     });
   }
   cancel() {
     this.cancelRegister.emit(false);
-    console.log('canceled');
+    this.toastr.show('Canceled');
   }
 }

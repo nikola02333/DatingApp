@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from './../_services/auth.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -8,27 +9,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavComponent implements OnInit {
   model: any = {};
-  constructor(private autService: AuthService) { }
+  constructor(public autService: AuthService, private toastr: ToastrService) { }
 
   ngOnInit() {
   }
   login() {
   this.autService.login(this.model).subscribe(
-    next =>{
-      console.log('Logged in succesfully');
+    next => {
+      this.toastr.success('Logged in syccessfullu');
     }, error => {
-      console.log('Faild to login');
+      this.toastr.error('Something went wrong');
     }
   );
   }
     //  koristim je za NgIf
   loggedIn() {
-    const token = localStorage.getItem('token');
-    return !!token; // ako je token varijabla prazna, vratice false
-                    // ako je puna, vratice true
+    // const token = localStorage.getItem('token');
+    // return !!token; // ako je token varijabla prazna, vratice false
+    return this.autService.loggedId();
   }
   logout() {
     localStorage.removeItem('token');
-    console.log('logged out!!!');
+    this.toastr.show('logged out');
   }
 }

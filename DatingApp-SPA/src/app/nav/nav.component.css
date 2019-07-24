@@ -1,0 +1,6 @@
+.dropdown-toggle{
+     cursor: pointer; /* da bi lepo izgledala rucica kad strelicom dodjes na ime usera xD*/
+}
+.dropdown-item{
+    cursor: pointer;
+}
