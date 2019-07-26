@@ -1,0 +1,21 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AatingApp.API.Models;
+
+namespace AatingApp.API.Data
+{
+    public interface IDatingRepository
+    {
+         void Add<T> (T entity) where T: class;
+         // umesto Pravljenja 2 metode za Add User-a i Photo
+         // pravimo 1 metodu koja ce oba posla raditi
+         void Delete<T> (T entity) where T: class;
+
+        Task<bool> SaveAll();
+
+        Task<IEnumerable<User>> GetUsers();
+
+        Task<User> GetUser(int id);
+        
+    }
+}

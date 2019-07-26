@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace AatingApp.API.Controllers {
+    
     [Route ("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase {

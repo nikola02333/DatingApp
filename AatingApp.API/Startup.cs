@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AatingApp.API.Data;
+﻿using AatingApp.API.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -19,6 +12,7 @@ using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using AatingApp.API.Helpers;
+using AutoMapper;
 
 namespace DatingApp.API
 {
@@ -36,9 +30,17 @@ namespace DatingApp.API
         {
             services.AddDbContext<DataContext> (x => x.UseSqlite( Configuration.GetConnectionString("DefaultConnection")));
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                        .AddJsonOptions( opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                        
             services.AddCors();
+            services.AddAutoMapper();
+            
+            services.AddTransient<Seed>();
+
             services.AddScoped<IAuthRepository, AuthRepository>(); // servis je kreiran za svaki poziv, slicno kao Singleton
+            services.AddScoped<IDatingRepository,DatingRepository>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                      .AddJwtBearer(options =>{
                          options.TokenValidationParameters = new TokenValidationParameters{
@@ -53,7 +55,7 @@ namespace DatingApp.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder)
         {
             if (env.IsDevelopment())
             {
@@ -67,7 +69,7 @@ namespace DatingApp.API
                             var error = _context.Features.Get<IExceptionHandlerFeature>();
                             if(error != null)
                             
-                            {
+                            { 
                                 _context.Response.AddApplicationError(error.Error.Message);
                                 await _context.Response.WriteAsync(error.Error.Message);
                             }
@@ -77,6 +79,8 @@ namespace DatingApp.API
             }
 
             //app.UseHttpsRedirection();
+
+            //seeder.SeedUsers(); // Popunjaca Db
             app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc(); // midlware , izmedju klijenta i API(servera)
