@@ -1,0 +1,19 @@
+import { PathLocationStrategy } from '@angular/common';
+import { Photo } from './Photo';
+
+export interface User {
+    id: number;
+    username: string;
+    knownAs: string;
+    age: number;
+    gender: string;
+    created: Date;
+    lastActive: Date;
+    photoUrl: string;
+    city: string;
+    contry: string;
+    interests?: string;
+    intruduction?: string;
+    lookingFor?: string;
+    photos?: Photo[];
+}
