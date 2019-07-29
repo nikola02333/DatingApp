@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AatingApp.API.Data;
 using AatingApp.API.Dtos;
@@ -32,6 +34,20 @@ namespace AatingApp.API.Controllers {
 
             var userTOReturn = _mapper.Map<UserForDetailedDto>(user);
             return Ok (userTOReturn);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto) {
+            if( id != int.Parse( User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var userFromRepo = await _repoo.GetUser(id);    
+            _mapper.Map( userForUpdateDto , userFromRepo);
+            // sa leva na desno, ubacuje nove podatke
+            if( await _repoo.SaveAll())
+             return NoContent();
+
+            throw  new Exception($"Updating user {id} failed to save");
         }
     }
 }
