@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 export class MemberEditComponent implements OnInit {
   @ViewChild('editForm', {static: false}) editForm: NgForm;
   user: User;
+  photoUrl: string;
   @HostListener('window:beroreunload', ['$event'])
   unloadNotification($event: any) {
     if (this.editForm.dirty) {
@@ -29,6 +30,7 @@ export class MemberEditComponent implements OnInit {
     this.route.data.subscribe( data => {
        this.user = data['user'];
     });
+    this.autService.currentPotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
   }
   updateUser() {
     //  this.autService.decodedToken.nameid
@@ -40,6 +42,8 @@ export class MemberEditComponent implements OnInit {
       this.toast.error(error);
     }
     );
-    
+  }
+  updateMainPhoto(photoUrl: string) {
+    this.user.photoUrl = photoUrl;
   }
 }

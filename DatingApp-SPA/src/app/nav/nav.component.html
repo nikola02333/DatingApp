@@ -15,6 +15,10 @@
     </ul>
 
     <div  *ngIf="loggedIn()" class="dropdown " dropdown>
+      <span>
+        <img src="{{photoUrl}}" alt="">
+      </span>
+
       <a dropdownToggle  class=" dropdown-toggle text-light" >
        Welcome {{ autService.decodedToken.unique_name | titlecase}}
       </a>
