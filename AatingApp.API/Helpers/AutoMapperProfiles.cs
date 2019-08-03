@@ -31,6 +31,7 @@ namespace AatingApp.API.Helpers
 
             CreateMap<PhotoFroCreationDto, Photo>();
             
+            CreateMap<UserForRegisterDto, User>();
         }
     }
 }

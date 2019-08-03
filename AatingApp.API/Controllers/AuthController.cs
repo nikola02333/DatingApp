@@ -36,11 +36,11 @@ namespace AatingApp.API.Controllers {
             if (await _repo.UserExists (userFOrRegisterDto.Username))
                 return BadRequest ("Username already exists");
 
-            var userToCreate = new User {
-                Username = userFOrRegisterDto.Username
-            };
+            var userToCreate = _mapper.Map<User>(userFOrRegisterDto);
             var createdUser = await _repo.Register (userToCreate, userFOrRegisterDto.Password);
-            return StatusCode (201);
+            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser);
+
+            return CreatedAtRoute("GetUser", new { Controller= "users", id = createdUser.Id},userToReturn );
             //  CreatedAtRoute()
         }
 

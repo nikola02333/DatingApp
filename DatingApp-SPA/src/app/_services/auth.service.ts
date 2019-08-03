@@ -37,8 +37,8 @@ login(model: any) {  // pipe() rjx operator, zbog tokena ga korisimo,
             }
          })) ;
 }
-  register(model: any) {
-    return this.http.post(this.baseUrl + 'register', model);
+  register(user: User) {
+    return this.http.post(this.baseUrl + 'register', user);
   }
 
   loggedId() {
