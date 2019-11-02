@@ -6,7 +6,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { BsDropdownModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule } from 'ngx-bootstrap';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AppRoutingModule } from './app-routing.module';
 import { NgxGalleryModule } from 'ngx-gallery';
@@ -58,10 +58,12 @@ export function TokenGetter() {
       FormsModule,
       ReactiveFormsModule,
       BrowserAnimationsModule,
+      PaginationModule.forRoot(),
       ToastrModule.forRoot({positionClass: 'toast-bottom-right'}),
       BsDatepickerModule.forRoot(),
       BsDropdownModule.forRoot(),
       TabsModule.forRoot(),
+      ButtonsModule.forRoot(),
       FileUploadModule,
       NgxGalleryModule,
       JwtModule.forRoot({
