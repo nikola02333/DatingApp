@@ -33,6 +33,7 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
 import { ListsResolver } from './reslovers/lists.resolver';
 import { MessagesResolver } from './reslovers/messages.resolver';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { DatePipe } from '@angular/common';
 
 
 export function TokenGetter() {
@@ -79,6 +80,7 @@ export function TokenGetter() {
       })
        ],
    providers: [
+      DatePipe,
       AuthService,
       ErrorIntercepotorProvider,
       AuthGuard,

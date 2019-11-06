@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { Message } from '../_models/message';
 import { Pagination } from '../_models/pagination';
 import { UserService } from '../_services/user.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-messages',

@@ -57,7 +57,7 @@ export class MemberListComponent implements OnInit {
       this.pagination = res.pagination;
       console.log( 'drugo' + this.pagination.currentPage);
     }, error => {
-      this.toastService.error(error);
+      this.toastService.success(error);
     });
   }
 }

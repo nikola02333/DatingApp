@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { UserService } from './../../_services/user.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -17,7 +18,8 @@ export class MemberDetailComponent implements OnInit {
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
   constructor(private userService: UserService, private toast: ToastrService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              public datepipe: DatePipe) { }
               // a ctivatedRoute nam treba da bi ivukli ID iz URl-a
   ngOnInit() {
      this.route.data.subscribe( data => {

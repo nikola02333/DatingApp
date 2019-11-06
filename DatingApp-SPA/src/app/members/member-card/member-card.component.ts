@@ -22,7 +22,7 @@ export class MemberCardComponent implements OnInit {
     this.userservice.sendLike(this.authService.decodedToken.nameid, id).subscribe(data => {
       this.toast.success('You have liked: ' + this.user.knownAs);
     }, error => {
-      this.toast.error('error');
+      this.toast.error('you alredy liked this user');
     }
     );
   }

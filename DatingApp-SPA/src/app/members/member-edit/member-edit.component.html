@@ -26,7 +26,8 @@
             </div>
             <div>
               <strong>Last Active:</strong>
-              <p>{{user.lastActive | timeAgo}}</p>
+              <!--| timeAgo-->
+              <p>{{ this.datepipe.transform(user.lastActive) |timeAgo}}</p>
             </div>
             <div>
               <strong>Member since:</strong>

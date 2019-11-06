@@ -5,6 +5,7 @@ import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/_services/auth.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-member-edit',
@@ -24,13 +25,15 @@ export class MemberEditComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private toast: ToastrService,
               private userService: UserService,
-              private autService: AuthService) { }
+              private autService: AuthService,
+              public datepipe: DatePipe) { }
 
   ngOnInit() {
     this.route.data.subscribe( data => {
        this.user = data['user'];
     });
     this.autService.currentPotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
+    this.datepipe.transform (this.user.lastActive);
   }
   updateUser() {
     //  this.autService.decodedToken.nameid

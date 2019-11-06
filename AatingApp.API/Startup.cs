@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using AatingApp.API.Helpers;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace DatingApp.API
 {
@@ -27,6 +28,39 @@ namespace DatingApp.API
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext> (x => x.
+                    UseMySql( Configuration.GetConnectionString("DefaultConnection"))
+                    .ConfigureWarnings( warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning)));
+            
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                        .AddJsonOptions( opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                        
+            services.AddCors();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+
+            services.AddAutoMapper();
+            
+            services.AddTransient<Seed>();
+
+            services.AddScoped<IAuthRepository, AuthRepository>(); // servis je kreiran za svaki poziv, slicno kao Singleton
+            services.AddScoped<IDatingRepository,DatingRepository>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                     .AddJwtBearer(options =>{
+                         options.TokenValidationParameters = new TokenValidationParameters{
+
+                             ValidateIssuer=false,
+                             IssuerSigningKey = new SymmetricSecurityKey( Encoding.ASCII.GetBytes(Configuration.GetSection("appSettings:Token").Value)),
+                             
+                             
+                             ValidateAudience=false
+                         };
+                     });   
+            services.AddScoped<LogUserActivity>();
+        }
+
+    public void ConfigureDevelopmentServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext> (x => x.UseSqlite( Configuration.GetConnectionString("DefaultConnection")));
             
@@ -55,7 +89,10 @@ namespace DatingApp.API
                          };
                      });   
             services.AddScoped<LogUserActivity>();
-        }
+        }    
+
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder)
@@ -86,7 +123,14 @@ namespace DatingApp.API
             //seeder.SeedUsers(); // Popunjaca Db
             app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
-            app.UseMvc(); // midlware , izmedju klijenta i API(servera)
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseMvc(routs => {
+                routs.MapSpaFallbackRoute(
+                    name:"spa-fallback",
+                    defaults: new {Controller="Fallback", action ="Index"}
+                );
+            }); // midlware , izmedju klijenta i API(servera)
         }
     }
 }
