@@ -69,5 +69,29 @@ namespace AatingApp.API.Controllers
 
             throw new Exception($"Updating user {id} failed to save");
         }
+        [HttpPost("{id}/like/{recepientId}")]
+        public async Task<ActionResult> LikeUser(int id, int recepientId) {
+
+            if( id !=int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+            
+            var like = await _repoo.GetLike(id, recepientId);
+            if (like != null)
+                return BadRequest("You Already like this user");
+
+            if (await _repoo.GetUser(recepientId) == null)
+               return NotFound();
+
+            like = new Models.Like
+            {
+                LikerId = id,
+                LikeeId = recepientId
+            };
+            _repoo.Add<Models.Like>(like);
+            if (await _repoo.SaveAll())
+                return Ok();
+
+        return BadRequest("Failed to Like User");
+        }
     }
 }

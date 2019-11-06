@@ -1,3 +1,4 @@
+import { Message } from './_models/message';
 import { MemberListResolver } from './reslovers/member-list.resolver';
 import { MemberDetailResolver } from './reslovers/member-detail.resolver';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
@@ -11,6 +12,8 @@ import { AuthGuard } from './_guards/auth.guard';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import {MemberEditResolver} from '../app/reslovers/member-edit-resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
+import { ListsResolver } from './reslovers/lists.resolver';
+import { MessagesResolver } from './reslovers/messages.resolver';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -23,8 +26,8 @@ const routes: Routes = [
       {path: 'members/:id', component: MemberDetailComponent, resolve: {user: MemberDetailResolver}},
       {path: 'member/edit' , component: MemberEditComponent,
                              resolve: {user: MemberEditResolver}, canDeactivate: [PreventUnsavedChanges]},
-      {path: 'messages', component: MessagesComponent},
-      {path: 'lists', component: ListsComponent},
+      {path: 'messages', component: MessagesComponent, resolve: { messages: MessagesResolver}},
+      {path: 'lists', component: ListsComponent, resolve: { users: ListsResolver} },
     ]
   },
 

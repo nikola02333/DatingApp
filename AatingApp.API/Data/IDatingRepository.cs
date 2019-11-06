@@ -20,6 +20,13 @@ namespace AatingApp.API.Data
         Task<Photo> GetPhoto(int id);
 
         Task<Photo> GetMainPhotoForUser(int usrerId);
+
+        Task<Like> GetLike(int userId, int recipentId);
+
+        Task<Message> GetMessage(int id);
+        Task<PagedList<Message>> GetMessageForUser(MessageParams messageParams);        
+
+        Task<IEnumerable<Message>> GetMessageThread(int userId,int recipentId);
         
     }
 }
